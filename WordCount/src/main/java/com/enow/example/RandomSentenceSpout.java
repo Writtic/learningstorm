@@ -33,43 +33,32 @@ import backtype.storm.utils.Utils;
 import java.util.Map;
 import java.util.Random;
 
-//This spout randomly emits sentences
 //랜덤하게 문장들을 내뿜는 spout
 public class RandomSentenceSpout extends BaseRichSpout {
-  //Collector used to emit output
   //아웃풋을 방출하는데 사용되는 콜렉터
   SpoutOutputCollector _collector;
-  //Used to generate a random number
   //난수 생성기
   Random _rand;
 
-  //Open is called when an instance of the class is created
   //Open 함수는 클래스 인스턴스가 생성되면 호출된다.
   @Override
   public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-  //Set the instance collector to the one passed in
   //콜렉터 인스턴스를 콜렉터에 넣어준다.
     _collector = collector;
-    //For randomness
     //난수 생성기
     _rand = new Random();
   }
 
-  //Emit data to the stream
   //스트림에 데이터를 방출
   @Override
   public void nextTuple() {
-  //Sleep for a bit
   //잠깐 쉬어주고 감
     Utils.sleep(100);
-    //The sentences that will be randomly emitted
     //랜덤하게 방출될 sentences 문자열들
     String[] sentences = new String[]{ "the cow jumped over the moon", "an apple a day keeps the doctor away",
         "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature" };
-    //Randomly pick a sentence
     //랜덤하게 한 문장을 뽐음
     String sentence = sentences[_rand.nextInt(sentences.length)];
-    //Emit the sentence
     //문장 방출
     _collector.emit(new Values(sentence));
   }
@@ -85,7 +74,6 @@ public class RandomSentenceSpout extends BaseRichSpout {
   }
 
   //Declare the output fields. In this case, an sentence
-  //아웃풋 필드를 선언. 여기선 문장이 된다.
   @Override
   public void declareOutputFields(OutputFieldsDeclarer declarer) {
     declarer.declare(new Fields("sentence"));
